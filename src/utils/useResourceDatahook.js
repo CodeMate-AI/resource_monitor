@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://172.191.30.191:2125';
+const API_URL = process.env.REACT_APP_API_URL || 'https://resprov.codemate.live';
 const POLL_INTERVAL = 500000;
 
 function useResourceData() {
