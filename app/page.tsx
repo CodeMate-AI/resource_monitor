@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableHeader, TableRow,TableHead, TableCell } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
 import {
   CpuIcon,
   HardDriveIcon,
@@ -20,16 +27,24 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import useResourceData from '../lib/useResourceDatahook';
+import useResourceData from "../lib/useResourceDatahook";
 
 export default function MonitoringDashboard() {
-  const { chartData, currentMetrics, timeRange, setTimeRange, isLoading, error, processes } = useResourceData();
+  const {
+    chartData,
+    currentMetrics,
+    timeRange,
+    setTimeRange,
+    isLoading,
+    error,
+    processes,
+  } = useResourceData();
   const [showCPU, setShowCPU] = useState(true);
   const [showRAM, setShowRAM] = useState(true);
   const [showDisk, setShowDisk] = useState(true);
   const [showNetworkSent, setShowNetworkSent] = useState(true);
   const [showNetworkReceived, setShowNetworkReceived] = useState(true);
-  console.log("respons",processes);
+  console.log("respons", processes);
   const metricColors = {
     CPU: "#8884d8",
     RAM: "#82ca9d",
@@ -72,7 +87,19 @@ export default function MonitoringDashboard() {
             <CpuIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{currentMetrics ? `${currentMetrics.CPU}%` : 'N/A'}</div>
+            <div
+              className={`text-2xl font-bold ${
+                currentMetrics
+                  ? currentMetrics.CPU <= 60
+                    ? "text-green-500"
+                    : currentMetrics.CPU <= 80
+                    ? "text-yellow-500"
+                    : "text-red-500"
+                  : ""
+              }`}
+            >
+              {currentMetrics ? `${currentMetrics.CPU}%` : "N/A"}
+            </div>
           </CardContent>
         </Card>
 
@@ -82,7 +109,19 @@ export default function MonitoringDashboard() {
             <MemoryStickIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{currentMetrics ? `${currentMetrics.RAM}%` : 'N/A'}</div>
+          <div
+              className={`text-2xl font-bold ${
+                currentMetrics
+                  ? currentMetrics.RAM <= 60
+                    ? "text-green-500"
+                    : currentMetrics.RAM <= 80
+                    ? "text-yellow-500"
+                    : "text-red-500"
+                  : ""
+              }`}
+            >
+              {currentMetrics ? `${currentMetrics.RAM}%` : "N/A"}
+            </div>
           </CardContent>
         </Card>
 
@@ -92,7 +131,9 @@ export default function MonitoringDashboard() {
             <HardDriveIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{currentMetrics ? `${currentMetrics.Disk}%` : 'N/A'}</div>
+            <div className="text-2xl font-bold">
+              {currentMetrics ? `${currentMetrics.Disk}%` : "N/A"}
+            </div>
           </CardContent>
         </Card>
 
@@ -102,17 +143,25 @@ export default function MonitoringDashboard() {
             <NetworkIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{currentMetrics ? `${currentMetrics.NetworkSent} KB/s` : 'N/A'}</div>
+            <div className="text-2xl font-bold">
+              {currentMetrics ? `${currentMetrics.NetworkSent} KB/s` : "N/A"}
+            </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Network Received</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Network Received
+            </CardTitle>
             <NetworkIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{currentMetrics ? `${currentMetrics.NetworkReceived} KB/s` : 'N/A'}</div>
+            <div className="text-2xl font-bold">
+              {currentMetrics
+                ? `${currentMetrics.NetworkReceived} KB/s`
+                : "N/A"}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -137,17 +186,15 @@ export default function MonitoringDashboard() {
           </div>
           <div className="h-[400px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}
-
-              >
+              <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" />
                 <YAxis />
-                <Tooltip  />
+                <Tooltip />
                 <Legend />
                 {showCPU && (
                   <Line
-                  isAnimationActive={false} 
+                    isAnimationActive={false}
                     type="monotone"
                     dataKey="CPU"
                     stroke={metricColors.CPU}
@@ -156,7 +203,7 @@ export default function MonitoringDashboard() {
                 )}
                 {showRAM && (
                   <Line
-                  isAnimationActive={false} 
+                    isAnimationActive={false}
                     type="monotone"
                     dataKey="RAM"
                     stroke={metricColors.RAM}
@@ -165,7 +212,7 @@ export default function MonitoringDashboard() {
                 )}
                 {showDisk && (
                   <Line
-                  isAnimationActive={false} 
+                    isAnimationActive={false}
                     type="monotone"
                     dataKey="Disk"
                     stroke={metricColors.Disk}
@@ -174,7 +221,7 @@ export default function MonitoringDashboard() {
                 )}
                 {showNetworkSent && (
                   <Line
-                  isAnimationActive={false} 
+                    isAnimationActive={false}
                     type="monotone"
                     dataKey="NetworkSent"
                     stroke={metricColors.NetworkSent}
@@ -183,7 +230,7 @@ export default function MonitoringDashboard() {
                 )}
                 {showNetworkReceived && (
                   <Line
-                  isAnimationActive={false} 
+                    isAnimationActive={false}
                     type="monotone"
                     dataKey="NetworkReceived"
                     stroke={metricColors.NetworkReceived}
@@ -195,12 +242,16 @@ export default function MonitoringDashboard() {
           </div>
           <div className="mt-4 flex flex-wrap gap-4">
             <div className="flex items-center space-x-2">
-            <Switch
-  id="cpu-toggle"
-  checked={showCPU}
-  onChange={() => setShowCPU(prev => !prev)}
-/>
-              <label htmlFor="cpu-toggle" className="text-sm font-medium" style={{ color: metricColors.CPU }}>
+              <Switch
+                id="cpu-toggle"
+                checked={showCPU}
+                onChange={() => setShowCPU((prev) => !prev)}
+              />
+              <label
+                htmlFor="cpu-toggle"
+                className="text-sm font-medium"
+                style={{ color: metricColors.CPU }}
+              >
                 CPU
               </label>
             </div>
@@ -210,7 +261,11 @@ export default function MonitoringDashboard() {
                 checked={showRAM}
                 onCheckedChange={setShowRAM}
               />
-              <label htmlFor="ram-toggle" className="text-sm font-medium" style={{ color: metricColors.RAM }}>
+              <label
+                htmlFor="ram-toggle"
+                className="text-sm font-medium"
+                style={{ color: metricColors.RAM }}
+              >
                 RAM
               </label>
             </div>
@@ -220,7 +275,11 @@ export default function MonitoringDashboard() {
                 checked={showDisk}
                 onCheckedChange={setShowDisk}
               />
-              <label htmlFor="disk-toggle" className="text-sm font-medium" style={{ color: metricColors.Disk }}>
+              <label
+                htmlFor="disk-toggle"
+                className="text-sm font-medium"
+                style={{ color: metricColors.Disk }}
+              >
                 Disk
               </label>
             </div>
@@ -230,7 +289,11 @@ export default function MonitoringDashboard() {
                 checked={showNetworkSent}
                 onCheckedChange={setShowNetworkSent}
               />
-              <label htmlFor="network-sent-toggle" className="text-sm font-medium" style={{ color: metricColors.NetworkSent }}>
+              <label
+                htmlFor="network-sent-toggle"
+                className="text-sm font-medium"
+                style={{ color: metricColors.NetworkSent }}
+              >
                 Network Sent
               </label>
             </div>
@@ -240,7 +303,11 @@ export default function MonitoringDashboard() {
                 checked={showNetworkReceived}
                 onCheckedChange={setShowNetworkReceived}
               />
-              <label htmlFor="network-received-toggle" className="text-sm font-medium" style={{ color: metricColors.NetworkReceived }}>
+              <label
+                htmlFor="network-received-toggle"
+                className="text-sm font-medium"
+                style={{ color: metricColors.NetworkReceived }}
+              >
                 Network Received
               </label>
             </div>
@@ -252,40 +319,50 @@ export default function MonitoringDashboard() {
         <CardHeader>
           <CardTitle>Running Processes</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Table>
+        <CardContent className="flex">
+          <Table className="border">
             <TableHeader>
               <TableRow>
                 <TableHead>Process Name</TableHead>
                 <TableHead>RAM Usage</TableHead>
+                <TableHead>PID</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {processes.ram.sort((a, b) => b.consumption - a.consumption).slice(0, 5).map((process, index) => (
-                <TableRow key={index}>
-                  <TableCell>{process.NAME}</TableCell>
-                  <TableCell>{process.consumption}</TableCell>
-                </TableRow>
-              ))}
+              {processes.ram
+                .sort((a, b) => b.consumption - a.consumption)
+                .slice(0, 5)
+                .map((process, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{process.NAME}</TableCell>
+                    <TableCell>{process.consumption}</TableCell>
+                    <TableCell>{[process.PID]}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
-          <Table>
+          <Table className="border">
             <TableHeader>
               <TableRow>
                 <TableHead>Process Name</TableHead>
                 <TableHead>CPU Usage</TableHead>
+                <TableHead>PID</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {processes.cpu.sort((a, b) => b.consumption - a.consumption).slice(0, 5).map((process, index) => (
-                <TableRow key={index}>
-                  <TableCell>{process.NAME}</TableCell>
-                  <TableCell>{process.consumption}</TableCell>
-                </TableRow>
-              ))}
+              {processes.cpu
+                .sort((a, b) => b.consumption - a.consumption)
+                .slice(0, 5)
+                .map((process, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{process.NAME}</TableCell>
+                    <TableCell>{process.consumption}</TableCell>
+                    <TableCell>{[process.PID]}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
-          <Table>
+          <Table className="border">
             <TableHeader>
               <TableRow>
                 <TableHead>Process Name</TableHead>
@@ -293,12 +370,15 @@ export default function MonitoringDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {processes.gpu.sort((a, b) => b.consumption - a.consumption).slice(0, 5).map((process, index) => (
-                <TableRow key={index}>
-                  <TableCell>{process.NAME}</TableCell>
-                  <TableCell>{process.consumption}</TableCell>
-                </TableRow>
-              ))}
+              {processes.gpu
+                .sort((a, b) => b.consumption - a.consumption)
+                .slice(0, 5)
+                .map((process, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{process.NAME}</TableCell>
+                    <TableCell>{process.consumption}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </CardContent>
