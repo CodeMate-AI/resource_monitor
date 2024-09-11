@@ -36,14 +36,11 @@ export default function MonitoringDashboard() {
     timeRange,
     setTimeRange,
     isLoading,
-    error,
     processes,
   } = useResourceData();
   const [showCPU, setShowCPU] = useState(true);
   const [showRAM, setShowRAM] = useState(true);
   const [showDisk, setShowDisk] = useState(true);
-  const [showNetworkSent, setShowNetworkSent] = useState(true);
-  const [showNetworkReceived, setShowNetworkReceived] = useState(true);
   console.log("respons", processes);
   const metricColors = {
     CPU: "#8884d8",
@@ -53,21 +50,21 @@ export default function MonitoringDashboard() {
     NetworkReceived: "#0088FE",
   };
 
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-background p-4 rounded-md shadow-md border border-border">
-          <p className="font-bold">{`Time: ${label}`}</p>
-          {payload.map((entry, index) => (
-            <p key={`item-${index}`} style={{ color: entry.color }}>
-              {`${entry.name}: ${entry.value}`}
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
+  // const CustomTooltip = ({ active, payload, label }) => {
+  //   if (active && payload && payload.length) {
+  //     return (
+  //       <div className="bg-background p-4 rounded-md shadow-md border border-border">
+  //         <p className="font-bold">{`Time: ${label}`}</p>
+  //         {payload.map((entry, index) => (
+  //           <p key={`item-${index}`} style={{ color: entry.color }}>
+  //             {`${entry.name}: ${entry.value}`}
+  //           </p>
+  //         ))}
+  //       </div>
+  //     );
+  //   }
+  //   return null;
+  // };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -219,24 +216,6 @@ export default function MonitoringDashboard() {
                     name="Disk"
                   />
                 )}
-                {showNetworkSent && (
-                  <Line
-                    isAnimationActive={false}
-                    type="monotone"
-                    dataKey="NetworkSent"
-                    stroke={metricColors.NetworkSent}
-                    name="Network Sent"
-                  />
-                )}
-                {showNetworkReceived && (
-                  <Line
-                    isAnimationActive={false}
-                    type="monotone"
-                    dataKey="NetworkReceived"
-                    stroke={metricColors.NetworkReceived}
-                    name="Network Received"
-                  />
-                )}
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -282,35 +261,7 @@ export default function MonitoringDashboard() {
               >
                 Disk
               </label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="network-sent-toggle"
-                checked={showNetworkSent}
-                onCheckedChange={setShowNetworkSent}
-              />
-              <label
-                htmlFor="network-sent-toggle"
-                className="text-sm font-medium"
-                style={{ color: metricColors.NetworkSent }}
-              >
-                Network Sent
-              </label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="network-received-toggle"
-                checked={showNetworkReceived}
-                onCheckedChange={setShowNetworkReceived}
-              />
-              <label
-                htmlFor="network-received-toggle"
-                className="text-sm font-medium"
-                style={{ color: metricColors.NetworkReceived }}
-              >
-                Network Received
-              </label>
-            </div>
+          </div>
           </div>
         </CardContent>
       </Card>
